@@ -20,7 +20,6 @@ from logging import debug, info, warning, error
 
 
 import Config
-import Exceptions
 
 # hashlib backported to python 2.4 / 2.5 is not compatible with hmac!
 if sys.version_info[0] == 2 and sys.version_info[1] < 6:
@@ -67,6 +66,7 @@ def stripNameSpace(xml):
 __all__.append("stripNameSpace")
 
 def getTreeFromXml(xml):
+    import Exceptions
     xml, xmlns = stripNameSpace(xml)
     try:
         tree = ET.fromstring(xml)
@@ -387,6 +387,7 @@ def sign_url_base(**parms):
     return "http://%(bucket)s.s3.amazonaws.com/%(object)s?AWSAccessKeyId=%(access_key)s&Expires=%(expiry)d&Signature=%(sig)s" % parms
 
 def time_to_epoch(t):
+    import Exceptions
     """Convert time specified in a variety of forms into UNIX epoch time.
     Accepts datetime.datetime, int, anything that has a strftime() method, and standard time 9-tuples
     """
@@ -414,10 +415,12 @@ def time_to_epoch(t):
                 # Will fall through
                 debug("Failed to parse date with strptime: %s", ex)
                 pass
+
     raise Exceptions.ParameterError('Unable to convert %r to an epoch time. Pass an epoch time. Try `date -d \'now + 1 year\' +%%s` (shell) or time.mktime (Python).' % t)
 
 
 def check_bucket_name(bucket, dns_strict = True):
+    import Exceptions
     if dns_strict:
         invalid = re.search("([^a-z0-9\.-])", bucket)
         if invalid:
@@ -446,6 +449,7 @@ def check_bucket_name(bucket, dns_strict = True):
 __all__.append("check_bucket_name")
 
 def check_bucket_name_dns_conformity(bucket):
+    import Exceptions
     try:
         return check_bucket_name(bucket, dns_strict = True)
     except Exceptions.ParameterError:
