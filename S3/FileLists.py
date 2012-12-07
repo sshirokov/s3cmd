@@ -140,9 +140,8 @@ def handle_exclude_include_walk(root, dirs, files):
 def fetch_local_list(args, recursive = None):
     def _get_filelist_local(loc_list, local_uri, cache):
         info(u"Compiling list of local files...")
-        
+
         if deunicodise(local_uri.basename()) == "-":
-            loc_list = SortedDict(ignore_case = False)
             loc_list["-"] = {
                 'full_name_unicode' : '-',
                 'full_name' : '-',
@@ -214,7 +213,7 @@ def fetch_local_list(args, recursive = None):
             cache.load(cfg.cache_file)
 	except IOError:
 	    info(u"No cache file found, creating it.")
-    
+
     local_uris = []
     local_list = SortedDict(ignore_case = False)
     single_file = False
@@ -368,7 +367,7 @@ def fetch_remote_list(args, require_attribs = False, recursive = None):
                         attrs = parse_attrs_header(response['headers']['x-amz-meta-s3cmd-attrs'])
 			if attrs.has_key('md5'):
                             remote_item.update({'md5': attrs['md5']})
-		    
+
                 remote_list[key] = remote_item
     return remote_list
 
@@ -471,7 +470,7 @@ def compare_filelists(src_list, dst_list, src_remote, dst_remote, delay_updates 
                 else:
 		    # record that we will get this file transferred to us (before all the copies), so if we come across it later again,
 		    # we can copy from _this_ copy (e.g. we only upload it once, and copy thereafter).
-		    dst_list.record_md5(relative_file, md5) 
+		    dst_list.record_md5(relative_file, md5)
 		    update_list[relative_file] = src_list[relative_file]
 		    del src_list[relative_file]
 		    del dst_list[relative_file]
@@ -490,7 +489,7 @@ def compare_filelists(src_list, dst_list, src_remote, dst_remote, delay_updates 
                 # we don't have this file, and we don't have a copy of this file elsewhere.  Get it.
 	        # record that we will get this file transferred to us (before all the copies), so if we come across it later again,
 	        # we can copy from _this_ copy (e.g. we only upload it once, and copy thereafter).
-	        dst_list.record_md5(relative_file, md5) 
+	        dst_list.record_md5(relative_file, md5)
 
     for f in dst_list.keys():
         if not src_list.has_key(f) and not update_list.has_key(f):
