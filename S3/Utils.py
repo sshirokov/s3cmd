@@ -20,7 +20,6 @@ from logging import debug, info, warning, error
 
 
 import Config
-import Exceptions
 
 # hashlib backported to python 2.4 / 2.5 is not compatible with hmac!
 if sys.version_info[0] == 2 and sys.version_info[1] < 6:
@@ -67,6 +66,8 @@ def stripNameSpace(xml):
 __all__.append("stripNameSpace")
 
 def getTreeFromXml(xml):
+    import Exceptions
+
     xml, xmlns = stripNameSpace(xml)
     try:
         tree = ET.fromstring(xml)
@@ -399,10 +400,12 @@ def time_to_epoch(t):
                 # Will fall through
                 debug("Failed to parse date with strptime: %s", ex)
                 pass
+    import Exceptions
     raise Exceptions.ParameterError('Unable to convert %r to an epoch time. Pass an epoch time. Try `date -d \'now + 1 year\' +%%s` (shell) or time.mktime (Python).' % t)
 
 
 def check_bucket_name(bucket, dns_strict = True):
+    import Exceptions
     if dns_strict:
         invalid = re.search("([^a-z0-9\.-])", bucket)
         if invalid:
@@ -431,6 +434,7 @@ def check_bucket_name(bucket, dns_strict = True):
 __all__.append("check_bucket_name")
 
 def check_bucket_name_dns_conformity(bucket):
+    import Exceptions
     try:
         return check_bucket_name(bucket, dns_strict = True)
     except Exceptions.ParameterError:
